@@ -1,0 +1,3 @@
+sample,assay,quadrant,notes
+20220216_1338_L,novel_object,q1,AttributeError: 'AccumulationManager' object has no attribute 'ratio_accumulated_images'
+20220215_1353_L,novel_object,q3,One fish remains still and the other remains close to the object

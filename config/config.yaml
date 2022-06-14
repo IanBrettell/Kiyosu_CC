@@ -1,0 +1,37 @@
+####################
+# Config files
+####################
+samples_file:
+    config/samples.csv
+excluded_videos:
+    config/excluded_videos.csv
+####################
+# Parameters
+####################
+
+####################
+# Locations
+####################
+repo_dir:
+    /hps/software/users/birney/ian/repos/Kiyosu_CC
+raw_data_dir:
+    /nfs/ftp/private/indigene_ftp/upload/behaviour/transfer/F2/Kiyosu_all
+working_dir:
+    /hps/nobackup/birney/users/ian/Kiyosu_CC
+data_store_dir:
+    /nfs/research/birney/users/ian/Kiyosu_CC
+####################
+# Containers
+####################
+#ffmpeg:
+#    docker://jrottenberg/ffmpeg:4.4-ubuntu
+opencv:
+    /hps/nobackup/birney/users/ian/containers/Kiyosu_CC/opencv_4.5.1.sif
+idtrackerai:
+    # NOTE: Dockerfile for this container: workflow/envs/idtrackerai/Dockerfile
+    docker://saulpierottiebi/idtrackerai_cpu_gui:latest
+rocker_tidyverse:
+    docker://rocker/tidyverse:4.1.2
+
+
+

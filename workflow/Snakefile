@@ -1,0 +1,78 @@
+include: "rules/00_common.smk"
+include: "rules/01_pre-processing.smk"
+include: "rules/02_tracking.smk"
+include: "rules/03_qc.smk"
+
+##### Target rules #####
+
+rule all:
+    input:
+######################
+## 01_pre-processing.smk
+######################
+## copy_videos
+#        expand(os.path.join(config["working_dir"], "raw_videos/{sample}.avi"),
+#                sample = SAMPLES
+#        ),
+## recode_videos
+#        expand(os.path.join(
+#            config["working_dir"],
+#            "recoded/{sample}.avi"),
+#                sample = SAMPLES
+#        ),
+## set_split_coords
+#        expand("results/split_coord_images/{assay}/{sample}.png",
+#                assay = ASSAYS,
+#                sample = SAMPLES
+#        ),
+## split_videos
+#        expand(os.path.join(
+#                config["working_dir"],
+#                "split/{assay}/{sample}_{quadrant}.avi"
+#                ),
+#                  zip,
+#                  assay = ASSAYS,
+#                  sample = SAMPLES,
+#                  quadrant = QUADRANTS
+#        ),
+######################
+## 02_tracking.smk
+######################
+# track_videos
+        expand(os.path.join(
+                config["working_dir"], 
+                "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
+                        zip,
+                        assay = ASSAYS,
+                        sample = SAMPLES,
+                        quadrant = QUADRANTS
+        ),
+## coloured_trails
+#        expand(os.path.join(config["working_dir"], "split/{assay}/{sample}_{quadrant}_tracked.avi"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS
+#        ),
+## trajectories_to_csv
+#        expand(os.path.join(config["working_dir"], "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.trajectories.csv"),
+#                zip,
+#                assay = ASSAYS,
+#                sample = SAMPLES,
+#                quadrant = QUADRANTS
+#        ),
+# assign_ref_test
+        expand(rules.assign_ref_test.output,
+                zip,
+                assay = ASSAYS,
+                sample = SAMPLES,
+                quadrant = QUADRANTS         
+        ),
+        rules.tracking_success.output,
+
+######################
+## 03_qc.smk
+######################
+#        rules.tracking_success.output,
+##### Modules #####
+
