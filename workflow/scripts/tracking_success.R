@@ -11,8 +11,8 @@ library(tidyverse)
 # Get variables
 
 ## Debug
-IN_FILES = list("/nfs/research/birney/users/ian/MIKK_F2_tracking/final_tracks/novel_object/20211222_1045_R_q1.csv",
-                "/nfs/research/birney/users/ian/MIKK_F2_tracking/final_tracks/novel_object/20211222_1045_R_q2.csv")
+IN_FILES = list("/hps/nobackup/birney/users/ian/Kiyosu_CC/final_tracks/novel_object/20220204_1416_R_q3.csv",
+                "/hps/nobackup/birney/users/ian/Kiyosu_CC/final_tracks/novel_object/20220204_1416_R_q4.csv")
 
 ## True
 IN_FILES = snakemake@input
@@ -47,11 +47,19 @@ final_df = purrr::map(IN_FILES, function(IN_FILE){
 }) %>% 
     # bind into single DF
     dplyr::bind_rows() %>%
+    # separate `sample` into `date`, `time`, and `quadrant`
+    tidyr::separate(sample,
+                    into = c("date", "time", "tank_side", "quadrant"),
+                    sep = "_") %>% 
+    # re-create sample
+    tidyr::unite(col = "sample",
+                 date, time, tank_side,
+                 sep = "_") %>% 
     # reorder columns
-    dplyr::select(sample, assay, everything()) %>%
+    dplyr::select(sample, quadrant, assay, everything()) %>%
     # order rows by `prop_success`
     dplyr::arrange(prop_success)
 
-# Write to file
+# Write to file
 
 readr::write_csv(final_df, OUT_FILE)

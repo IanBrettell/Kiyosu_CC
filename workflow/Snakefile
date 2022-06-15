@@ -2,6 +2,7 @@ include: "rules/00_common.smk"
 include: "rules/01_pre-processing.smk"
 include: "rules/02_tracking.smk"
 include: "rules/03_qc.smk"
+include: "rules/04_hmm.smk"
 
 ##### Target rules #####
 
@@ -38,15 +39,15 @@ rule all:
 ######################
 ## 02_tracking.smk
 ######################
-# track_videos
-        expand(os.path.join(
-                config["working_dir"], 
-                "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
-                        zip,
-                        assay = ASSAYS,
-                        sample = SAMPLES,
-                        quadrant = QUADRANTS
-        ),
+## track_videos
+#        expand(os.path.join(
+#                config["working_dir"], 
+#                "split/{assay}/session_{sample}_{quadrant}/trajectories/trajectories.npy"),
+#                        zip,
+#                        assay = ASSAYS,
+#                        sample = SAMPLES,
+#                        quadrant = QUADRANTS
+#        ),
 ## coloured_trails
 #        expand(os.path.join(config["working_dir"], "split/{assay}/{sample}_{quadrant}_tracked.avi"),
 #                zip,
@@ -61,7 +62,9 @@ rule all:
 #                sample = SAMPLES,
 #                quadrant = QUADRANTS
 #        ),
-# assign_ref_test
+######################
+## 03_qc.smk
+######################
         expand(rules.assign_ref_test.output,
                 zip,
                 assay = ASSAYS,
@@ -69,10 +72,21 @@ rule all:
                 quadrant = QUADRANTS         
         ),
         rules.tracking_success.output,
-
 ######################
-## 03_qc.smk
+## 03_hmm.smk
 ######################
-#        rules.tracking_success.output,
+        expand(rules.movement_metrics.output,
+                zip,
+                assay = ASSAYS_ZIP_TRK_INT,
+                sample = SAMPLES_ZIP_TRK_INT,
+                quadrant = QUADRANTS_ZIP_TRK_INT,                
+                interval = INTERVALS_ZIP_TRK_INT
+        ),
+        expand(rules.merge_csvs.output,
+                interval = config["seconds_interval"]
+        ),
+        expand(rules.send_to_shared_folder.output,
+                interval = config["seconds_interval"]
+        ), 
 ##### Modules #####
 

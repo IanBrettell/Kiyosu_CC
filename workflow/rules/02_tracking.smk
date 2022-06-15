@@ -77,7 +77,10 @@ rule track_videos:
             "trajectories.trajectories.csv"
         )
     log:
-        os.path.join(config["working_dir"], "logs/track_videos/{assay}/{sample}/{quadrant}.log"),
+        os.path.join(
+            config["working_dir"],
+            "logs/track_videos/{assay}/{sample}/{quadrant}.log"
+        ),
     params:
         vid_length = get_vid_length,
         vid_name = "{sample}_{quadrant}",
